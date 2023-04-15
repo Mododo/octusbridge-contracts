@@ -108,7 +108,7 @@ describe('Withdraw custom tokens by burning in favor of merge pool', async funct
     });
 
     it('Mint custom tokens to initializer', async () => {
-        await proxy.methods.mint({
+        await locklift.transactions.waitFinalized(proxy.methods.mint({
             amount: mintAmount,
             recipient: initializer.address,
             payload: '',
@@ -116,7 +116,7 @@ describe('Withdraw custom tokens by burning in favor of merge pool', async funct
         }).send({
             from: bridgeOwner.address,
             amount: locklift.utils.toNano(2)
-        });
+        }));
     });
 
     it('Check initializer custom token balance', async () => {
@@ -139,14 +139,14 @@ describe('Withdraw custom tokens by burning in favor of merge pool', async funct
     });
 
     it('Deploy alien token root', async () => {
-        await proxy.methods.deploySolanaAlienToken({
+        await locklift.transactions.waitFinalized(proxy.methods.deploySolanaAlienToken({
             ...alienTokenBase,
             ...alienTokenMeta,
             remainingGasTo: initializer.address
         }).send({
             from: initializer.address,
             amount: locklift.utils.toNano(5),
-        });
+        }));
 
         const alienTokenRootAddress = await proxy.methods.deriveSolanaAlienTokenRoot({
             ...alienTokenBase,
@@ -163,12 +163,12 @@ describe('Withdraw custom tokens by burning in favor of merge pool', async funct
     });
 
     it('Deploy merge router', async () => {
-        await proxy.methods.deployMergeRouter({
+        await locklift.transactions.waitFinalized(proxy.methods.deployMergeRouter({
             token: alienTokenRoot.address
         }).send({
             from: initializer.address,
             amount: locklift.utils.toNano(5)
-        });
+        }));
 
         const mergeRouterAddress = await proxy.methods.deriveMergeRouter({
             answerId: 0,
@@ -186,14 +186,14 @@ describe('Withdraw custom tokens by burning in favor of merge pool', async funct
     it('Deploy merge pool', async () => {
         const nonce = locklift.utils.getRandomNonce();
 
-        await proxy.methods.deployMergePool({
+        await locklift.transactions.waitFinalized(proxy.methods.deployMergePool({
             nonce,
             tokens: [alienTokenRoot.address, customTokenRoot.address],
             canonId: 1
         }).send({
             from: initializer.address,
             amount: locklift.utils.toNano(5)
-        });
+        }));
 
         const mergePoolAddress = await proxy.methods.deriveMergePool({
             nonce,
@@ -209,14 +209,19 @@ describe('Withdraw custom tokens by burning in favor of merge pool', async funct
     });
 
     it('Enable merge pool tokens', async () => {
-        await mergePool.methods.enableAll().send({
+        await locklift.transactions.waitFinalized(mergePool.methods.enableAll().send({
             from: bridgeOwner.address,
             amount: locklift.utils.toNano(1)
-        });
+        }));
 
         const tokens = await mergePool.methods.getTokens({
             answerId: 0
         }).call();
+
+
+        locklift.clock.time
+        locklift.testing.getCurrentTime()
+
 
         expect(tokens._tokens[0][1].enabled)
             .to.be.equal(true, 'Wrong alien status');
@@ -234,7 +239,7 @@ describe('Withdraw custom tokens by burning in favor of merge pool', async funct
             executeAccounts
         }).call();
 
-        const tx = await locklift.tracing.trace(initializerCustomTokenWallet.methods.burn({
+        const tx = await locklift.transactions.waitFinalized(initializerCustomTokenWallet.methods.burn({
             amount,
             remainingGasTo: initializer.address,
             callbackTo: mergePool.address,

@@ -14,7 +14,7 @@ export const setupEthereumEverscaleEventConfiguration = async (
 
     const {
         contract: ethereumEverscaleEventConfiguration
-    } = await locklift.factory.deployContract({
+    } = await locklift.transactions.waitFinalized(locklift.factory.deployContract({
         contract: "EthereumEverscaleEventConfiguration",
         constructorParams: {
             _owner: owner.address,
@@ -38,7 +38,7 @@ export const setupEthereumEverscaleEventConfiguration = async (
         },
         publicKey: signer.publicKey,
         value: locklift.utils.toNano(20),
-    });
+    }));
 
     await logContract(
         "EthereumEverscaleEventConfiguration",
@@ -59,7 +59,7 @@ export const setupEverscaleEthereumEventConfiguration = async (
 
     const {
         contract: everscaleEthereumEventConfiguration
-    } = await locklift.factory.deployContract({
+    } = await locklift.transactions.waitFinalized(locklift.factory.deployContract({
         contract: "EverscaleEthereumEventConfiguration",
         constructorParams: {
             _owner: owner.address,
@@ -81,7 +81,7 @@ export const setupEverscaleEthereumEventConfiguration = async (
         },
         publicKey: signer.publicKey,
         value: locklift.utils.toNano(2),
-    });
+    }));
 
     await logContract(
         "EverscaleEthereumEventConfiguration",

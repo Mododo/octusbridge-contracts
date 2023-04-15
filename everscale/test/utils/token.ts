@@ -18,7 +18,7 @@ export const deployTokenRoot = async function (
         "TokenWallet"
     );
 
-    const { contract: _root } = await locklift.factory.deployContract({
+    const { contract: _root } = await locklift.transactions.waitFinalized( locklift.factory.deployContract({
         contract: "TokenRoot",
         constructorParams: {
             initialSupplyTo: zeroAddress,
@@ -40,7 +40,7 @@ export const deployTokenRoot = async function (
         },
         publicKey: signer.publicKey,
         value: locklift.utils.toNano(2),
-    });
+    }));
 
     return _root;
 };

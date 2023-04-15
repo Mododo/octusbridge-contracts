@@ -109,7 +109,7 @@ export const setupBridge = async (relays: Ed25519KeyPair[]): Promise<[
 
     await logContract("Owner", owner.address);
 
-    const { contract: staking } = await locklift.tracing.trace(
+    const { contract: staking } = await locklift.transactions.waitFinalized(
         locklift.factory.deployContract({
             contract: "StakingMockup",
             constructorParams: {},
@@ -128,7 +128,7 @@ export const setupBridge = async (relays: Ed25519KeyPair[]): Promise<[
         "Connector"
     );
 
-    const { contract: bridge } = await locklift.tracing.trace(
+    const { contract: bridge } = await locklift.transactions.waitFinalized(
         locklift.factory.deployContract({
             contract: "Bridge",
             constructorParams: {
@@ -148,7 +148,7 @@ export const setupBridge = async (relays: Ed25519KeyPair[]): Promise<[
 
     await logContract("Bridge", bridge.address);
 
-    const { contract: cellEncoder } = await locklift.factory.deployContract({
+    const { contract: cellEncoder } = await locklift.transactions.waitFinalized(locklift.factory.deployContract({
         contract: "CellEncoderStandalone",
         constructorParams: {},
         initParams: {
@@ -156,7 +156,7 @@ export const setupBridge = async (relays: Ed25519KeyPair[]): Promise<[
         },
         publicKey: signer.publicKey,
         value: locklift.utils.toNano(1),
-    });
+    }));
 
     await logContract("CellEncoderStandalone", cellEncoder.address);
 

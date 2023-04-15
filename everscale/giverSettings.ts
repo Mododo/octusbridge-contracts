@@ -11,13 +11,13 @@ export class SimpleGiver implements Giver {
     }
 
     public async sendTo(sendTo: Address, value: string): Promise<{ transaction: Transaction; output?: {} }> {
-        return this.giverContract.methods
+        return locklift.transactions.waitFinalized(this.giverContract.methods
             .sendTransaction({
                 value: value,
                 dest: sendTo,
                 bounce: false,
             })
-            .sendExternal({ publicKey: this.keyPair.publicKey });
+            .sendExternal({ publicKey: this.keyPair.publicKey })) ;
     }
 }
 
@@ -30,12 +30,12 @@ export class TestnetGiver implements Giver {
     }
 
     public async sendTo(sendTo: Address, value: string): Promise<{ transaction: Transaction; output?: {} }> {
-        return this.giverContract.methods
+        return locklift.transactions.waitFinalized(this.giverContract.methods
             .sendGrams({
                 dest: sendTo,
                 amount: value
             })
-            .sendExternal({ publicKey: this.keyPair.publicKey });
+            .sendExternal({ publicKey: this.keyPair.publicKey }));
     }
 }
 
@@ -105,7 +105,7 @@ export class GiverWallet implements Giver {
     }
 
     public async sendTo(sendTo: Address, value: string): Promise<{ transaction: Transaction; output?: {} }> {
-        return this.giverContract.methods
+        return locklift.transactions.waitFinalized(this.giverContract.methods
             .sendTransaction({
                 value: value,
                 dest: sendTo,
@@ -113,7 +113,7 @@ export class GiverWallet implements Giver {
                 flags: 3,
                 payload: "",
             })
-            .sendExternal({ publicKey: this.keyPair.publicKey });
+            .sendExternal({ publicKey: this.keyPair.publicKey }));
     }
 }
 
@@ -145,7 +145,7 @@ export class GiverWalletV2_3 implements Giver {
     }
 
     public async sendTo(sendTo: Address, value: string): Promise<{ transaction: Transaction; output?: {} }> {
-        return this.giverContract.methods
+        return locklift.transactions.waitFinalized(this.giverContract.methods
             .sendTransaction({
                 value: value,
                 dest: sendTo,
@@ -153,7 +153,7 @@ export class GiverWalletV2_3 implements Giver {
                 flags: 3,
                 payload: "",
             })
-            .sendExternal({ publicKey: this.keyPair.publicKey });
+            .sendExternal({ publicKey: this.keyPair.publicKey }));
     }
 }
 

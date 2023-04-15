@@ -10,8 +10,8 @@ declare global {
 const config: LockliftConfig = {
   compiler: {
     // Specify path to your TON-Solidity-Compiler
-    path: "/usr/local/bin/solc-e66e9ac",
-
+    // path: "/usr/local/bin/solc-e66e9ac",
+    version: "0.62.0",
     // Or specify version of compiler
 
     // Specify config for extarnal contracts as in exapmple
@@ -20,12 +20,13 @@ const config: LockliftConfig = {
       "../node_modules/ton-eth-bridge-token-contracts/build": ['TokenRoot', 'TokenWallet']
     }
   },
-  linker: {
-    // Specify path to your stdlib
-    lib: "/Users/pavlovdog/TON-Solidity-Compiler/lib/stdlib_sol.tvm",
-    // // Specify path to your Linker
-    path: "/usr/local/bin/tvm_linker-0.16.1",
-  },
+  linker: { version: '0.15.48' },
+  // linker: {
+  //   // Specify path to your stdlib
+  //   lib: "/Users/pavlovdog/TON-Solidity-Compiler/lib/stdlib_sol.tvm",
+  //   // // Specify path to your Linker
+  //   path: "/usr/local/bin/tvm_linker-0.16.1",
+  // },
   networks: {
     testnet: {
       // Specify connection settings for https://github.com/broxus/everscale-standalone-client/
